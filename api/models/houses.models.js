@@ -1,14 +1,16 @@
 import mongoose from 'mongoose'
 
-const houseSchema = mongoose.Schema({
-    address: String,
-    number: Number,
-    habitants: [
-        { type: mongoose.Schema.Types.ObjectId }
-    ]
-},
-{timestamps: true })
+const houseSchema = mongoose.Schema(
+    {
+        address: String,
+        number: Number,
+        habitants: [
+            { type: mongoose.Schema.Types.ObjectId }
+        ]
+    },
+    { timestamps: true }
+)
 
-const House = mongoose.Model('House', houseSchema)
+const House = mongoose.model('House', houseSchema)
 
 export default House
