@@ -1,20 +1,23 @@
 import express from 'express'
-import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './api/config/database.js'
 
-const app = express()
-dotenv.config()
+import userRoutes from './api/routes/users.routes.js'
+
+dotenv.config();
+connectDB();
+const app = express();
 
 app.use(express.json())
-app.use(cors())
-connectDB()
 
-app.use('/', (req, res) => {
-    res.json({"message": "Visistant registration API..."})
+app.get('/', (req, res) => {
+    res.send({"message": "Visistant registration API..."})
 });
+
+//ROUTES
+app.use("/api/users", userRoutes)
 
 const PORT = process.env.PORT || 4000
 
 app.listen(PORT, 
-    console.log(`Server running in ${PORT}`))
+    console.log(`Server running as ${process.env.MODE} in ${PORT}`))
