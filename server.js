@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './api/config/database.js';
 
 import userRoutes from './api/routes/users.routes.js';
+import houseRoutes from './api/routes/houses.routes.js';
 
 import { notFound, errorHandler } from './api/middleware/errorMiddleware.js';
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 
 //ROUTES
 app.use("/api/users", userRoutes);
+app.use("/api/houses", houseRoutes);
 
 //MIDDLEWARE
 app.use(notFound);
