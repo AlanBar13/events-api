@@ -5,7 +5,7 @@ import User from "../models/users.models.js";
 //@route POST /api/users
 //@access public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, isAdmin } = req.body;
     const userExist = await User.findOne({email});
     if(userExist){
         res.status(400);
@@ -15,7 +15,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name,
         email,
-        password
+        password,
+        isAdmin
     });
 
     if(user){
@@ -30,8 +31,29 @@ const registerUser = asyncHandler(async (req, res) => {
 //@route GET /api/users
 //@access public
 const listAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({});
-    res.send(users)
+    const users = await User.find({}).select('-password');
+    res.send(users);
+});
+
+//@desc GET A USERS
+//@route GET /api/users/:id
+//@access public
+const getUser = asyncHandler( async (req, res) => {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    
+    if(user){
+        res.status(200);
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin
+        });
+    }else{
+        res.status(400);
+        throw new Error('Invalid user id');
+    }
 });
 
 //@desc AUTH USER
@@ -50,5 +72,20 @@ const authUser = asyncHandler(async (req, res) => {
     }
 });
 
+//@desc DELETE USER
+//@route DELETE /api/users/:id
+//@access private
+const deleteUser = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const { deletedCount } = await User.deleteOne({ _id: userId });
+    if(deletedCount === 1){
+        res.status(200);
+        res.json({ deleted: true, userId });
+    }else{
+        res.send(400);
+        throw new Error('Invalid user id')
+    }
+});
 
-export { registerUser, listAllUsers, authUser }
+
+export { registerUser, listAllUsers, authUser, deleteUser, getUser }
