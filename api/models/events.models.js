@@ -9,8 +9,7 @@ const eventsSchema = mongoose.Schema(
             name: {type: String, required: true },
             vehicleId: {type: String, required: true },
         },
-        user: {type: mongoose.Schema.Types.ObjectId, required: true },
-        house: {type: mongoose.Schema.Types.ObjectId, require: true },
+        house: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'House' },
         visitArrivedTime: {type: Date },
         visitLeftTime: {type: Date }
     },

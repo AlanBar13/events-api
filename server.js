@@ -4,6 +4,7 @@ import connectDB from './api/config/database.js';
 
 import userRoutes from './api/routes/users.routes.js';
 import houseRoutes from './api/routes/houses.routes.js';
+import eventRoutes from './api/routes/events.routes.js';
 
 import { notFound, errorHandler } from './api/middleware/errorMiddleware.js';
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 //ROUTES
 app.use("/api/users", userRoutes);
 app.use("/api/houses", houseRoutes);
+app.use("/api/events", eventRoutes);
 
 //MIDDLEWARE
 app.use(notFound);
