@@ -8,7 +8,7 @@ Event API for creating, deleting, reading and updating events, users and houses.
 ## Dependencies used
 express, mongoose, jsonwebtoken, bcrypt, express-async-handler
 
-### Available Scripts
+## Available Scripts
 
 In the project directory, you can run:
 
