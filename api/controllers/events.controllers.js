@@ -68,7 +68,7 @@ const addEvent = ascynHandler( async (req, res) => {
     });
 
     if(newEvent){
-        res.status(200);
+        res.status(201);
         res.send(newEvent)
     }else{
         res.status(400);

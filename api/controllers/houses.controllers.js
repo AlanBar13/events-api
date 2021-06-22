@@ -35,7 +35,7 @@ const addHouse = asyncHandler(async (req, res) => {
     })
 
     if(house){
-        res.status(200);
+        res.status(201);
         res.send(house);
     }else{
         res.status(400);

@@ -1,5 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from "../models/users.models.js";
+import generateToken from '../utils/generateToken.js'
+import encrypt from '../utils/encryptPwd.js'
 
 //@desc REGISTER NEW USER
 //@route POST /api/users
@@ -20,7 +22,13 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     if(user){
-        res.status(200).json(user);
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id),
+        });
     }else{
         res.status(400);
         throw new Error('Invalid user data');
@@ -64,10 +72,15 @@ const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
     if(user && (await user.matchPassword(password))){
         res.status(200)
-        //generate token and send it to a new user object
-        res.send(user)
+        res.send({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id)
+        })
     }else{
-        res.status(400)
+        res.status(401);
         throw new Error('Wrong email or password')
     }
 });
@@ -88,4 +101,24 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 
-export { registerUser, listAllUsers, authUser, deleteUser, getUser }
+//@desc RESET PASSWORD
+//@route POST /api/users/:id/resetpwd
+//@access private
+const resetPwd = asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const {password} = req.body;
+
+    const user = await User.findByIdAndUpdate(userId, {
+        password: await encrypt(password)
+    });
+    if(user){
+        res.status(202);
+        res.json({message: "Password reset"})
+    }else{
+        res.status(400);
+        throw new Error('Invalid id')
+    }
+
+})
+
+export { registerUser, listAllUsers, authUser, deleteUser, getUser, resetPwd }
