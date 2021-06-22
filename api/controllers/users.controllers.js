@@ -87,15 +87,21 @@ const authUser = asyncHandler(async (req, res) => {
 
 //@desc DELETE USER
 //@route DELETE /api/users/:id
-//@access private
+//@access private ADMIN
 const deleteUser = asyncHandler(async (req, res) => {
     const userId = req.params.id;
+
+    if(!req.user.isAdmin){
+        res.status(401);
+        throw new Error('Only for Admin Users')
+    }
+
     const { deletedCount } = await User.deleteOne({ _id: userId });
     if(deletedCount === 1){
         res.status(200);
         res.json({ deleted: true, userId });
     }else{
-        res.send(400);
+        res.status(400);
         throw new Error('Invalid user id')
     }
 });
@@ -103,10 +109,15 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 //@desc RESET PASSWORD
 //@route POST /api/users/:id/resetpwd
-//@access private
+//@access private ADMIN
 const resetPwd = asyncHandler(async (req, res) => {
     const userId = req.params.id;
     const {password} = req.body;
+
+    if(!req.user.isAdmin){
+        res.status(401);
+        throw new Error('Only for Admin Users')
+    }
 
     const user = await User.findByIdAndUpdate(userId, {
         password: await encrypt(password)

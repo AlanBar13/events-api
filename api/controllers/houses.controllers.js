@@ -3,7 +3,7 @@ import House from '../models/houses.models.js'
 
 //@desc LIST ALL HOUSES
 //@route GET /api/houses
-//@access private PENDING
+//@access private 
 const listAllHouses = asyncHandler(async (req, res) => {
     const houses = await House.find({}).populate('habitants', 'name email');
     res.send(houses)
@@ -11,7 +11,7 @@ const listAllHouses = asyncHandler(async (req, res) => {
 
 //@desc GET A HOUSE BY ID
 //@route GET /api/houses/:id
-//@access private PENDING
+//@access private 
 const getHouse = asyncHandler(async (req, res) => {
     const houseId = req.params.id
     const houses = await House.find({ _id: houseId }).populate('habitants', 'name email');
@@ -20,14 +20,20 @@ const getHouse = asyncHandler(async (req, res) => {
 
 //@desc ADD NEW HOUSE
 //@route POST /api/houses
-//@access private PENDING
+//@access private ADMIN
 const addHouse = asyncHandler(async (req, res) => {
     const { address, number, habitants } = req.body;
     const existHouse = await House.findOne({ number });
+    if(!req.user.isAdmin){
+        res.status(401);
+        throw new Error('Only for Admin Users')
+    }
+
     if(existHouse){
         res.status(400);
         throw new Error('House already exists')
     }
+
     const house = await House.create({
         address,
         number,
@@ -45,7 +51,7 @@ const addHouse = asyncHandler(async (req, res) => {
 
 //@desc ADD HABITANTS TO HOUSE
 //@route PUT /api/houses/:id/habitant
-//@access private PENDING
+//@access private 
 const addHabitant = asyncHandler(async (req, res) => {
     const houseId = req.params.id;
     const { userId } = req.body;
@@ -72,9 +78,15 @@ const addHabitant = asyncHandler(async (req, res) => {
 
 //@desc DELETE A HOUSE
 //@route DELETE /api/houses/:id
-//@access private PENDING
+//@access private ADMIN
 const deleteHouse = asyncHandler(async (req, res) => {
     const houseId = req.params.id;
+
+    if(!req.user.isAdmin){
+        res.status(401);
+        throw new Error('Only for Admin Users')
+    }
+
     const { deletedCount } = await House.deleteOne({ _id: houseId });
     if(deletedCount === 1){
         res.status(200);
@@ -88,7 +100,7 @@ const deleteHouse = asyncHandler(async (req, res) => {
 
 //@desc DELETE A HABITANT
 //@route DELETE /api/houses/:id/habitants
-//@access private PENDING
+//@access private 
 const deleteHabitant = asyncHandler( async (req, res) => {
     const houseId = req.params.id;
     const { habitantId } = req.body;

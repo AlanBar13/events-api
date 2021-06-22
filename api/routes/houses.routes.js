@@ -1,13 +1,14 @@
 import express from 'express';
 import { listAllHouses, addHouse, addHabitant, deleteHouse, getHouse, deleteHabitant } from '../controllers/houses.controllers.js';
+import { protect } from '../middleware/authMiddleware.js'
 
 const router = express.Router();
 
-router.route('/').get(listAllHouses);
-router.route('/:id').get(getHouse);
-router.route('/').post(addHouse);
-router.route('/:id/habitants').put(addHabitant);
-router.route('/:id/habitants').delete(deleteHabitant);
-router.route('/:id').delete(deleteHouse);
+router.route('/').get(protect, listAllHouses);
+router.route('/:id').get(protect, getHouse);
+router.route('/').post(protect, addHouse);
+router.route('/:id/habitants').put(protect, addHabitant);
+router.route('/:id/habitants').delete(protect, deleteHabitant);
+router.route('/:id').delete(protect, deleteHouse);
 
 export default router;
