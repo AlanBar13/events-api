@@ -26,13 +26,13 @@ const importData = async () => {
         const newHouses = houses.map((h, index) => {
             return {...h, habitants: [createdUsers[index + 1]._id]}
         })
-        await House.insertMany(newHouses)
+        const createdHouses = await House.insertMany(newHouses)
         const newEvents = events.map((e, index) => {
             return {...e, user: createdUsers[index + 1]._id, house: createdHouses[index]._id}
         })
         await Event.insertMany(newEvents)
         const newNotices = notices.map((n, index) => {
-            return {...n, comments: { text: `Comment notice ${index + 1}`, author: createdUsers[index + 1]._id}}
+            return {...n, comments: [ {text: `Comment notice ${index + 1}`, author: createdUsers[index + 1]._id}]}
         })
         await Notice.insertMany(newNotices)
         console.log('Data Imported')
