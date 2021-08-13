@@ -88,7 +88,7 @@ const deleteEvent = ascynHandler( async (req, res) => {
         res.json({deleted: true, eventId})
     }else{
         res.status(400);
-        throw new Event('Invalid id')
+        throw new Error('Invalid id')
     }
 });
 
