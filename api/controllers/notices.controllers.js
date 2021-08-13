@@ -98,7 +98,7 @@ const addComment = asyncHandler(async (req, res) => {
         id,
         { $push: { comments: comment } },
         { new: true, useFindAndModify: true }
-    )
+    ).populate('comments.author', 'name email')
     if (newNotice) {
         res.status(200)
         res.send(newNotice)
@@ -108,4 +108,50 @@ const addComment = asyncHandler(async (req, res) => {
     }
 })
 
-export { listNotices, getNotice, addNotice, deleteNotice, addComment }
+//@desc DELETE A COMMENT IN A NOTICE
+//@route DELETE /api/notices/:noticeId/comment/:commentId
+//@access private
+const deleteComment = asyncHandler(async (req, res) => {
+    const { noticeId, commentId } = req.params
+    const delComment = await Notices.findByIdAndUpdate(
+        noticeId,
+        { $pull: { comments: { _id: commentId } } }
+    )
+
+    if (delComment) {
+        res.status(200)
+        res.send({ deleted: true, commentId })
+    } else {
+        res.status(400)
+        throw new Error('Invalid Id')
+    }
+})
+
+//@desc UPDATE A NOTICE
+//@route PUT /api/notices/:id
+//@access private
+const updateNotice = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { title, description, type } = req.body
+    const { isAdmin } = req.user
+
+    if (!isAdmin) {
+        res.status(401)
+        throw new Error('Not Authorized')
+    }
+
+    const updatedNotice = await Notices.findByIdAndUpdate(
+        id,
+        { title, description, type },
+        { new: true, useFindAndModify: true }
+    )
+    if (updatedNotice) {
+        res.status(200)
+        res.send(updatedNotice)
+    } else {
+        res.status(400)
+        throw new Error('Invalid Data')
+    }
+})
+
+export { listNotices, getNotice, addNotice, deleteNotice, addComment, deleteComment, updateNotice }
