@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './api/config/database.js';
+import cors from 'cors'
 
 import userRoutes from './api/routes/users.routes.js';
 import houseRoutes from './api/routes/houses.routes.js';
@@ -14,6 +15,7 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+app.use(cors())
 
 app.get('/', (req, res) => {
     res.send({"message": "Visistant registration API..."});

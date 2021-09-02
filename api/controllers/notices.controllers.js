@@ -1,4 +1,3 @@
-import e from 'express';
 import asyncHandler from 'express-async-handler'
 import Notices from '../models/notices.model.js'
 

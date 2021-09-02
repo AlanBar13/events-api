@@ -8,8 +8,7 @@ const listEvents = ascynHandler(async (req, res) => {
     const events = await Event.find({}).populate('house')
         .populate({
             path: 'house',
-            select: 'address number', 
-            populate: { path: 'habitants', select: 'name email' }
+            select: 'address number'
         });
 
     res.status(200);
