@@ -5,7 +5,11 @@ import Event from '../models/events.models.js'
 //@route GET /api/events
 //@access public
 const listEvents = ascynHandler(async (req, res) => {
-    const events = await Event.find({}).populate('house')
+    const events = await Event.find({})
+        .populate({
+            path: 'user',
+            select: 'name email'
+        })
         .populate({
             path: 'house',
             select: 'address number'
@@ -63,7 +67,8 @@ const addEvent = ascynHandler( async (req, res) => {
         visitInfo,
         house,
         visitArrivedTime: visitArrivedTime || new Date(),
-        visitLeftTime: visitLeftTime || new Date()
+        visitLeftTime: visitLeftTime || new Date(),
+        user: req.user._id
     });
 
     if(newEvent){
@@ -91,4 +96,25 @@ const deleteEvent = ascynHandler( async (req, res) => {
     }
 });
 
-export { listEvents, addEvent, getEvent, deleteEvent };
+//@desc GET AN EVENT
+//@route GET /api/events/byUser/:userid
+//@access public
+const getEventByUser = ascynHandler( async (req, res) => {
+    const userId = req.params.userid;
+
+    const event = await Event.find({ user: userId })
+        .populate({ 
+            path: 'house',
+            select: 'address number'
+        });
+    if(event){
+        res.status(200);
+        res.send(event);
+    }else{
+        res.status(400);
+        throw new Error('Invalid id')
+    }
+
+});
+
+export { listEvents, addEvent, getEvent, deleteEvent, getEventByUser };
