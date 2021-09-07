@@ -91,7 +91,9 @@ const deleteNotice = asyncHandler(async (req, res) => {
 //@access private
 const addComment = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { comment } = req.body
+    const { text } = req.body
+    const user = req.user
+    const comment = { text, author: user._id }
 
     const newNotice = await Notices.findByIdAndUpdate(
         id,
