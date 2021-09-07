@@ -115,10 +115,23 @@ const deleteHabitant = asyncHandler( async (req, res) => {
     }else{
         res.status(400);
         throw new Error('Invalid house id');
+    } 
+});
+
+//@desc GET A HOUSE BY USER
+//@route GET /api/houses/byUser/:userid
+//@access private 
+const getHouseByUser = asyncHandler(async (req, res) => {
+    const userId = req.params.userid
+    const houses = await House.find({ habitants: userId }).populate('habitants', 'name email');
+    if(houses){
+        res.send(houses)
+    }else{
+        res.status(400)
+        throw new Error('Invalid house id');
     }
-    
 });
 
 
 
-export { listAllHouses, addHouse, addHabitant, deleteHouse, getHouse, deleteHabitant }
+export { listAllHouses, addHouse, addHabitant, deleteHouse, getHouse, deleteHabitant, getHouseByUser }
