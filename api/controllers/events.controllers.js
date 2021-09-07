@@ -66,8 +66,8 @@ const addEvent = ascynHandler( async (req, res) => {
         eventEnd: eventEnd || new Date(),
         visitInfo,
         house,
-        visitArrivedTime: visitArrivedTime || new Date(),
-        visitLeftTime: visitLeftTime || new Date(),
+        visitArrivedTime: visitArrivedTime || null,
+        visitLeftTime: visitLeftTime || null,
         user: req.user._id
     });
 
