@@ -9,7 +9,15 @@ const notFound = (req, res, next) => {
 
 const errorHandler = (err, req, res, next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    logger.error(`[Error] Status Code: ${statusCode} -- Message: ${err.message}`)
+    if(statusCode === 401){
+        if(req.user){
+            logger.error(`[Error] Status Code: ${statusCode} -- Email: ${req.user.email} Message: ${err.message}`)
+        }else{
+            logger.error(`[Error] Status Code: ${statusCode} -- Email: ${req.body.email} Message: ${err.message}`)
+        }
+    }else {
+        logger.error(`[Error] Status Code: ${statusCode} -- Message: ${err.message}`)
+    }
     res.status(statusCode);
     res.json({
         message: err.message,
