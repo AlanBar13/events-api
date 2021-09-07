@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import logger from '../utils/logger.js'
 
 dotenv.config()
 
@@ -17,9 +18,9 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useCreateIndex: true
         })
-        console.log(`MongoDB connected ${conn.connection.host}`)
+        console.log(`[DB service] MongoDB connected to ${conn.connection.host}`)
     }catch(error){
-        console.log(`Error: ${error.message}`)
+        logger.error('[DB service] error connecting to DB')
         process.exit(1)
     }
 }
