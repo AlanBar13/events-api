@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import connectDB from './api/config/database.js'
 
