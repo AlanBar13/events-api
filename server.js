@@ -7,6 +7,9 @@ import userRoutes from './api/routes/users.routes.js';
 import houseRoutes from './api/routes/houses.routes.js';
 import eventRoutes from './api/routes/events.routes.js';
 import noticesRoutes from './api/routes/notices.routes.js';
+import transactionRoutes from './api/routes/transactions.routes.js';
+
+import logger from './api/utils/logger.js';
 
 import { notFound, errorHandler } from './api/middleware/errorMiddleware.js';
 
@@ -14,6 +17,7 @@ dotenv.config();
 connectDB();
 const app = express();
 
+global.logger = logger;
 app.use(express.json());
 app.use(cors())
 
@@ -26,6 +30,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/houses", houseRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/notices", noticesRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 //MIDDLEWARE
 app.use(notFound);
