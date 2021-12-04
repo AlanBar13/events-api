@@ -10,7 +10,7 @@ const logger = createLogger({
     format.splat(),
     format.json()
     ),
-    defaultMeta: { service: 'Events API' },
+    defaultMeta: { service: 'Fraccio API' },
     transports: [
         new transports.File({ filename: 'error.log', level: 'error' }),
         new transports.File({ filename: 'combine.log' })
