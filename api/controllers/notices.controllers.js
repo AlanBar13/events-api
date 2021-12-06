@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Notices from '../models/notices.model.js'
+import socket from '../utils/socketIo.js'
 
 //@desc LIST ALL NOTICES
 //@route GET /api/notices
@@ -57,6 +58,10 @@ const addNotice = asyncHandler(async (req, res) => {
     if (newNotice) {
         res.status(201)
         res.send(newNotice)
+        const connection = socket.connection()
+        if(connection){
+            connection.emit('newNotice', newNotice)
+        }
     } else {
         res.status(400)
         throw new Error('Invalid Data')
